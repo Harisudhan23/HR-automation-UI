@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Anniversary</title>
+    <link rel="stylesheet" href="{% static 'anniversary/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button id="toggle-btn">&#9776;</button>
+    <div class="container">
+        <aside class="sidebar">
+            <h2> Anniversary </h2>
+            <div class="sidebar-buttons">
+                <a href="{% url 'ppt_automation' %}" class="sidebar-btn">PPT Automation</a>
+                <a href="#" class="sidebar-btn">Timesheet Automation</a>  
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+    
+</body>
+</html>
