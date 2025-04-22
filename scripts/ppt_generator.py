@@ -5,6 +5,7 @@ def generate_presentation(excel_path, template_path, output_path, user_name, yea
     import pandas as pd
     import comtypes.client
     from comtypes.gen import PowerPoint as PPConst
+    #import win32com.client
     
     def rgb_to_ole(red, green, blue):
         """Convert RGB to OLE color format used by PowerPoint."""
@@ -51,7 +52,7 @@ def generate_presentation(excel_path, template_path, output_path, user_name, yea
         text_frame = text_box.TextFrame.TextRange
         text_frame.Text = "Thank you"
         text_frame.Font.Size = 65
-        text_frame.Font.Name = "Century Gothic"
+        text_frame.Font.Name = "Times New Roman"
         text_frame.Font.Color.RGB = rgb_to_ole(255, 0, 0)
         text_frame.Font.Bold = True
         text_frame.Font.Italic = True
@@ -163,27 +164,27 @@ def generate_presentation(excel_path, template_path, output_path, user_name, yea
         
 
         name_left_position = first_slide.Master.Width - 450  
-        name_top_position = first_slide.Master.Height - 100  
+        name_top_position = first_slide.Master.Height - 150  
         name_text_box = first_slide.Shapes.AddTextbox(1, name_left_position, name_top_position, 250, 50)
         name_text_frame = name_text_box.TextFrame.TextRange
         name_text_frame.Text = user_name
         name_text_frame.Font.Size = 24
-        name_text_frame.Font.Name = "Century Gothic"
+        name_text_frame.Font.Name = "Times New Roman"
         name_text_frame.Font.Color.RGB = rgb_to_ole(0, 0, 0) 
         name_text_frame.Font.Bold = True
         name_text_frame.ParagraphFormat.Alignment = PPConst.ppAlignCenter
         
         
-        years_left_position = first_slide.Master.Width - 450
-        years_top_position = first_slide.Master.Height - 150
-        years_text_box = first_slide.Shapes.AddTextbox(1, years_left_position, years_top_position, 250, 50)
-        years_text_frame = years_text_box.TextFrame.TextRange
-        years_text_frame.Text = f"{years_of_service} Years of Service"
-        years_text_frame.Font.Size = 20
-        years_text_frame.Font.Name = "Century Gothic"
-        years_text_frame.Font.Color.RGB = rgb_to_ole(255, 0, 0)
-        years_text_frame.Font.Bold = True
-        years_text_frame.ParagraphFormat.Alignment = PPConst.ppAlignCenter
+        # years_left_position = first_slide.Master.Width - 450
+        # years_top_position = first_slide.Master.Height - 150
+        # years_text_box = first_slide.Shapes.AddTextbox(1, years_left_position, years_top_position, 250, 50)
+        # years_text_frame = years_text_box.TextFrame.TextRange
+        # years_text_frame.Text = f"{years_of_service} Years of Service"
+        # years_text_frame.Font.Size = 20
+        # years_text_frame.Font.Name = "Century Gothic"
+        # years_text_frame.Font.Color.RGB = rgb_to_ole(255, 0, 0)
+        # years_text_frame.Font.Bold = True
+        # years_text_frame.ParagraphFormat.Alignment = PPConst.ppAlignCenter
 
         if presentation.Slides.Count < 2:
             print("Template must have at least 2 slides (cover + message template).")
@@ -216,7 +217,7 @@ def generate_presentation(excel_path, template_path, output_path, user_name, yea
             text_frame = text_box.TextFrame.TextRange
             text_frame.Text = message
             text_frame.Font.Size = 18
-            text_frame.Font.Name = "Century Gothic"
+            text_frame.Font.Name = "Times New Roman"
             text_frame.Font.Bold = False
             text_frame.Font.Color.RGB = rgb_to_ole(0, 0, 0)
             text_frame.ParagraphFormat.Alignment = PPConst.ppAlignJustify
@@ -227,8 +228,9 @@ def generate_presentation(excel_path, template_path, output_path, user_name, yea
             signature_frame = signature_box.TextFrame.TextRange
             signature_frame.Text = f"- {', '.join(name.splitlines())}"  
             signature_frame.Font.Size = 18
-            signature_frame.Font.Name = "Century Gothic"
+            signature_frame.Font.Name = "Times New Roman"
             signature_frame.Font.Color.RGB = rgb_to_ole(255, 0, 0) 
+            signature_frame.Font.Italic = True
             signature_frame.Font.Bold = True
             signature_frame.ParagraphFormat.Alignment = PPConst.ppAlignRight  
             signature_box.TextFrame.WordWrap = False  
