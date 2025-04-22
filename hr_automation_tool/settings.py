@@ -10,7 +10,9 @@ SECRET_KEY = 'r!$!54f@-ydcg_onz$y=ck_!sr#v4mm-e!weh1zj&)z4pz(-jk'
 DEBUG = True
 
 # Hosts allowed to access the project
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://*.loca.lt']
 
 # Installed apps
 INSTALLED_APPS = [
@@ -89,7 +91,7 @@ USE_TZ = True
 
 # Static files (CSS, JS)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+#STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"  # for collectstatic
 
 # Media files (user uploads, PPTs, etc.)
