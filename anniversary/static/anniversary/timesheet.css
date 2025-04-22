@@ -1,0 +1,227 @@
+/* Global Styles */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f6f8;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    background-color: #2f3542;
+    color: #ffffff;
+    padding: 30px 20px;
+}
+
+.sidebar h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 16px;
+}
+
+.sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.sidebar-btn {
+    padding: 12px 20px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-btn:hover {
+    background-color: #45a049;
+}
+
+/* Main Content Section */
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Card Styling */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-body form .form-label {
+    font-weight: 600;
+}
+
+.card-body .form-control {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ced6e0;
+    font-size: 14px;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced6e0;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004080);
+    box-shadow: 0 6px 12px rgba(0, 86, 179, 0.4);
+    transform: translateY(-2px);
+}
+
+
+
+/* Modal Styling */
+.modal-content {
+    border-radius: 8px;
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: white;
+    padding: 1rem;
+    border-radius: 8px 8px 0 0;
+}
+
+.modal-footer {
+    padding: 1rem;
+}
+
+.modal-footer .btn {
+    font-size: 1rem;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-body .form-select {
+    border-radius: 8px;
+    padding: 0.75rem;
+    border: 1px solid #ced6e0;
+}
+
+/* Table for Validation Summary */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 1rem;
+    text-align: left;
+}
+
+.table-bordered {
+    border: 1px solid #ced6e0;
+}
+
+.table-light {
+    background-color: #f8f9fa;
+}
+
+.badge {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.badge.bg-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107;
+    color: white;
+}
+
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 220px;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 12px;
+    }
+
+    .table-responsive {
+        max-height: none;
+    }
+}
