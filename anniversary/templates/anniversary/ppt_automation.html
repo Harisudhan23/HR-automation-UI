@@ -7,16 +7,25 @@
         <div class="form-group">
             <label for="id_name">Employee Name</label>
             {{ form.name }}
+            {% if form.name.errors %}
+                <div class="error">{{ form.name.errors.0 }}</div>
+            {% endif %}
         </div>
 
         <div class="form-group">
             <label for="id_years">Years of Service</label>
             {{ form.years }}
+            {% if form.years.errors %}
+                <div class="error">{{ form.years.errors.0 }}</div>
+            {% endif %}
         </div>
 
         <div class="form-group">
             <label for="id_file">Upload Excel File</label>
             {{ form.file }}
+            {% if form.file.errors %}
+                <div class="error">{{ form.file.errors.0 }}</div>
+            {% endif %}
         </div>
 
         <button type="submit" class="submit-btn">Generate Presentation</button>

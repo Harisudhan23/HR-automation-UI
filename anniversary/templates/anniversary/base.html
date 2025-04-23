@@ -5,28 +5,26 @@
     <meta charset="UTF-8">
     <title>Anniversary</title>
     <link rel="stylesheet" href="{% static 'anniversary/style.css' %}">
-    <link rel="stylesheet" href="{% static 'anniversary/ppt.css' %}">
     <link rel="stylesheet" href="{% static 'anniversary/timesheet.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="logo-container">
-            <img src="{% static 'anniversary/images/Entrans_PNG.png' %}" alt="Logo" class="logo"/>
-        </div>
-    </header>
 
-    <button id="toggle-btn">&#9776;</button>
+    <!-- Sidebar Toggle -->
+    <button id="toggle-btn">&#9776;</button> 
 
     <div class="container">
+        <!-- Sidebar -->
         <aside class="sidebar">
+            <img src="{% static 'anniversary/images/Entrans_PNG.png' %}" alt="Company Logo" class="logo">
             <h2>HR Automation Tool</h2>
             <div class="sidebar-buttons">
                 <a href="{% url 'ppt_automation' %}" class="sidebar-btn">PPT Automation</a>
-                <a href="{% url 'timesheet_validation' %}" class="sidebar-btn">Timesheet Automation</a> 
+                <a href="{% url 'timesheet_validation' %}" class="sidebar-btn">Timesheet Automation</a>
             </div>
         </aside>
 
+        <!-- Main Content Area -->
         <main class="main-content">
             {% block content %}
             {% endblock %}

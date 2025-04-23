@@ -1,95 +1,119 @@
+/* Global Styles */
 body {
     margin: 0;
     font-family: 'Inter', sans-serif;
-    background-color: #f4f6f8;
+    background-color: #fffebf;
+    color: #2e2e2e;
 }
 
+/* Layout Container */
 .container {
     display: flex;
     height: 100vh;
+    overflow: hidden;
 }
 
-.home-content {
-    text-align: center;
-    padding: 50px;
-    background-color: #f7f9fc;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.home-content h1 {
-    font-size: 2.5em;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.home-content p {
-    font-size: 1.2em;
-    color: #9fa1ae;
-}
-
+/* Sidebar */
 .sidebar {
-    width: 250px;
-    background-color: #2f3542;
+    width: 260px;
+    background-color: #ffffff; /* white */; 
     color: #ffffff;
     padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar .logo {
+    width: 120px;
+    margin-bottom: 20px;
 }
 
 .sidebar h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar ul li {
-    margin-bottom: 16px;
+    font-size: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #000000;
 }
 
 .sidebar-buttons {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-top: 30px;
+    gap: 12px;
 }
 
 .sidebar-btn {
-    padding: 12px 20px;
+    display: block;
+    padding: 12px 18px;
+    background-color: #2563eb; /* blue */
+    color: #ffffff;
+    border-radius: 6px;
+    font-weight: 600;
     text-align: center;
-    background-color: #4CAF50;
-    color: white;
     text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
     transition: background-color 0.3s ease;
 }
 
 .sidebar-btn:hover {
-    background-color: #45a049;
+    background-color: #1e40af; /* darker blue */
 }
 
+/* Toggle Button */
+#toggle-btn {
+    display: none; /* Hidden until needed for mobile */
+}
+
+/* Main Content */
 .main-content {
     flex: 1;
+    padding: 50px;
+    background-color: #fffebf;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-y: auto;
 }
 
+/* Home Card Style */
+.card.home-card {
+    background-color: #ffffff;
+    padding: 40px 60px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #111827;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    color: #4b5563;
+    margin-bottom: 10px;
+}
+
+/* Form Styles */
 .form-wrapper {
     background: #ffffff;
     padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.08);
-    width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 500px;
 }
 
 .form-wrapper h1 {
     text-align: center;
     margin-bottom: 30px;
-    font-size: 22px;
+    font-size: 1.5rem;
+    color: #1f2937;
 }
 
 .form-group {
@@ -98,43 +122,35 @@ body {
 
 .form-group label {
     display: block;
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 8px;
+    color: #374151;
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ced6e0;
+    border: 1px solid #d1d5db;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 15px;
+    background-color: #f9fafb;
 }
 
 .submit-btn {
     width: 100%;
     padding: 12px;
-    background-color: #1e90ff;
+    background-color: #10b981; /* green */
     color: white;
     font-size: 16px;
     font-weight: 600;
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .submit-btn:hover {
-    background-color: #3742fa;
+    background-color: #059669;
 }
 
-.logo-container {
-    text-align: center;
-    margin-top: 40px;
-    margin-bottom: 20px;
-}
-
-.logo {
-    width: 150px; 
-    height: auto;
-    display: inline-block;
-}
