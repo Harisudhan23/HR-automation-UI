@@ -48,7 +48,7 @@ The **HR Automation Tool** is a Django-based application designed to automate Po
 
 ## Usage
 
-1. Access the web interface at http://127.0.0.1:8000/.
+1. Access the web interface at http://000.0.0.0:0000/.
 2. Use the sidebar to navigate between tools:
    - PPT Automation: Generate anniversary presentations.
    - Timesheet Validation: Validate and manage timesheets.
