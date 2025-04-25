@@ -1,7 +1,8 @@
 {% extends 'anniversary/base.html' %}
+{% load static %}
 {% block content %}
 <div class="form-wrapper">
-    <h1>Generate Work Anniversary PPT</h1>
+    <h1>AnniverSlide</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
@@ -11,7 +12,6 @@
                 <div class="error">{{ form.name.errors.0 }}</div>
             {% endif %}
         </div>
-
         <div class="form-group">
             <label for="id_years">Years of Service</label>
             {{ form.years }}
@@ -19,7 +19,6 @@
                 <div class="error">{{ form.years.errors.0 }}</div>
             {% endif %}
         </div>
-
         <div class="form-group">
             <label for="id_file">Upload Excel File</label>
             {{ form.file }}
@@ -27,7 +26,6 @@
                 <div class="error">{{ form.file.errors.0 }}</div>
             {% endif %}
         </div>
-
         <button type="submit" class="submit-btn">Generate Presentation</button>
     </form>
 </div>

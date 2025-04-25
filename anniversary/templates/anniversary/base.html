@@ -9,26 +9,44 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
+    <!-- Company Logo Top Right -->
+    <img src="{% static 'anniversary/images/Entrans_PNG.png' %}" alt="Company Logo" class="logo-top-right">
     <!-- Sidebar Toggle -->
     <button id="toggle-btn">&#9776;</button> 
-
     <div class="container">
+        <button id="showSidebar" class="show-sidebar-btn" style="display:none;" title="Show Sidebar">&#9776;</button>
         <!-- Sidebar -->
         <aside class="sidebar">
-            <img src="{% static 'anniversary/images/Entrans_PNG.png' %}" alt="Company Logo" class="logo">
-            <h2>HR Automation Tool</h2>
+            <button id="toggleSidebar" class="hide-sidebar-btn" title="Hide Sidebar">&#9776;</button>
+            <h2>HR Tool</h2>
             <div class="sidebar-buttons">
                 <a href="{% url 'ppt_automation' %}" class="sidebar-btn">PPT Automation</a>
-                <a href="{% url 'timesheet_validation' %}" class="sidebar-btn">Timesheet Automation</a>
+                <a href="{% url 'timesheet_validation' %}" class="sidebar-btn">Timesheet Summary</a>
             </div>
         </aside>
-
         <!-- Main Content Area -->
         <main class="main-content">
             {% block content %}
             {% endblock %}
         </main>
     </div>
+    <script>
+        var toggleBtn = document.getElementById('toggleSidebar');
+        var showBtn = document.getElementById('showSidebar');
+        var sidebar = document.querySelector('.sidebar');
+        var mainContent = document.querySelector('.main-content');
+
+        toggleBtn.onclick = function() {
+            sidebar.classList.add('hidden');
+            mainContent.classList.add('expanded');
+            showBtn.style.display = 'block';
+        };
+
+        showBtn.onclick = function() {
+            sidebar.classList.remove('hidden');
+            mainContent.classList.remove('expanded');
+            showBtn.style.display = 'none';
+        };
+    </script>
 </body>
 </html>

@@ -1,9 +1,21 @@
 {% extends 'anniversary/base.html' %}
+{% load static %}
 {% load custom_filter %}
 
 {% block content %}
 <div class="form-wrapper">
-    <h1>Timesheet Validation Tool</h1>
+    <!-- Vector Graphic (SVG) for Timesheet -->
+    <div style="text-align:center; margin-bottom: 24px;">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="15" y="25" width="90" height="70" rx="12" fill="#FDD143" stroke="#4CC46D" stroke-width="3"/>
+            <rect x="30" y="40" width="60" height="10" rx="3" fill="#fff"/>
+            <rect x="30" y="55" width="40" height="10" rx="3" fill="#fff"/>
+            <rect x="30" y="70" width="30" height="10" rx="3" fill="#fff"/>
+            <circle cx="100" cy="35" r="8" fill="#4CC46D" stroke="#fff" stroke-width="2"/>
+            <text x="60" y="90" text-anchor="middle" fill="#4CC46D" font-size="16" font-family="Inter, Arial, sans-serif" font-weight="bold">Timesheet</text>
+        </svg>
+    </div>
+    <h1>Timesheet Summary</h1>
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -11,7 +23,13 @@
         <div class="form-group">
             <label for="id_timesheet_file">Upload Timesheet Excel File</label>
             {{ form.timesheet_file }}
-            <small class="form-text text-muted">{{ form.timesheet_file.help_text }}</small>
+            <small class="form-text text-muted">
+                Please upload an Excel file containing timesheet data.
+                <a href="{% static 'anniversary/sample_template.xlsx' %}" download title="Download Sample Template" class="download-template-btn small-btn" style="margin-left:10px; display:inline-flex; align-items:center;">
+                    <span style="font-size: 1.1em; vertical-align: middle;"></span>
+                    <span style="font-size: 0.95em; vertical-align: middle; margin-left: 3px;">Sample Template</span>
+                </a>
+            </small>
         </div>
 
         <!-- <div class="form-group">
