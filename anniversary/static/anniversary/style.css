@@ -2,61 +2,79 @@
 body {
     margin: 0;
     font-family: 'Inter', sans-serif;
-    background-color: #fffebf;
+    background-color: #eacb64;
     color: #2e2e2e;
 }
 
-/* Layout Container */
-.container {
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
+.logo-top-right {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    width: 120px;
+    height: auto;
+    z-index: 1000;
 }
 
-/* Sidebar */
+/* Sidebar Styling Improvements */
 .sidebar {
-    width: 260px;
-    background-color: #ffffff; /* white */; 
-    color: #ffffff;
-    padding: 30px 20px;
+    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 40px 24px 30px 24px;
+    background: #fdf5be; 
+    color: #f55D5D;
+    border-radius: 0;
+    box-shadow: 2px 0 12px rgba(60,60,60,0.04);
+    border-right: 1px solid #e5e7eb; /* subtle border */
+    margin: 0;
 }
 
-.sidebar .logo {
-    width: 120px;
-    margin-bottom: 20px;
+.container {
+    display: flex;
+    align-items: stretch;
+    min-height: 100vh;
+    height: 100vh;
 }
 
 .sidebar h2 {
-    font-size: 20px;
-    margin-bottom: 30px;
-    text-align: center;
-    color: #000000;
+    font-size: 22px;
+    margin-bottom: 32px;
+    color: #4CC46D;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
 .sidebar-buttons {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
+    align-items: center; /* Center the sidebar buttons */
 }
 
 .sidebar-btn {
-    display: block;
-    padding: 12px 18px;
-    background-color: #2563eb; /* blue */
-    color: #ffffff;
-    border-radius: 6px;
+    background: linear-gradient(90deg, #f88888 60%, #FDD143 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 22px;
+    font-size: 1rem;
     font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(245,93,93,0.08);
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    width: 80%; /* Make buttons a bit narrower for centering effect */
+    text-align: center; /* Center text inside button */
 }
 
 .sidebar-btn:hover {
-    background-color: #1e40af; /* darker blue */
+    background: linear-gradient(90deg, #4CC46D 60%, #FDD143 100%);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(76,196,109,0.12);
 }
 
 /* Toggle Button */
@@ -64,93 +82,154 @@ body {
     display: none; /* Hidden until needed for mobile */
 }
 
-/* Main Content */
+/* Main Content Improvements */
 .main-content {
     flex: 1;
-    padding: 50px;
-    background-color: #fffebf;
+    padding: 60px 0;
+    background: #f2f3f5;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    height: 100vh;
     overflow-y: auto;
 }
 
-/* Home Card Style */
-.card.home-card {
-    background-color: #ffffff;
-    padding: 40px 60px;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-    max-width: 700px;
+.card.home-card, .form-wrapper {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(245,93,93,0.10);
+    padding: 48px 56px;
+    max-width: 520px;
     width: 100%;
-    text-align: center;
+    margin: 0 auto;
 }
 
-.card-title {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: #111827;
+.card-title, .form-wrapper h1 {
+    color: #4CC46D;
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+    text-align: center;
 }
 
 .card-text {
-    font-size: 1.1rem;
     color: #4b5563;
-    margin-bottom: 10px;
-}
-
-/* Form Styles */
-.form-wrapper {
-    background: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    width: 100%;
-    max-width: 500px;
-}
-
-.form-wrapper h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 1.5rem;
-    color: #1f2937;
-}
-
-.form-group {
-    margin-bottom: 20px;
+    font-size: 1.15rem;
+    margin-bottom: 14px;
 }
 
 .form-group label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 8px;
+    font-weight: 600;
     color: #374151;
+    margin-bottom: 7px;
 }
 
-.form-group input,
-.form-group select {
+.form-group input, .form-group select {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #d1d5db;
+    padding: 12px;
+    border: 1.5px solid #f55D5D;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 1rem;
     background-color: #f9fafb;
+    margin-bottom: 8px;
+    transition: border 0.2s;
+}
+.form-group input:focus, .form-group select:focus {
+    border: 1.5px solid #4CC46D;
+    outline: none;
 }
 
 .submit-btn {
     width: 100%;
-    padding: 12px;
-    background-color: #10b981; /* green */
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
+    padding: 14px;
+    background: linear-gradient(90deg, #f88888 60%, #FDD143 100%); /* Match PPT Automation button */
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 8px rgba(245,93,93,0.10);
+    transition: background 0.3s, box-shadow 0.3s;
 }
-
 .submit-btn:hover {
-    background-color: #059669;
+    background: linear-gradient(90deg, #4CC46D 60%, #FDD143 100%);
+    box-shadow: 0 4px 16px rgba(245,93,93,0.12);
 }
 
+/* PPT Preview Box */
+.ppt-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+}
+.ppt-preview-title {
+    font-size: 1.1rem;
+    color: #4CC46D;
+    font-weight: 600;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+.ppt-preview-img {
+    width: 320px;
+    height: 180px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(76,196,109,0.10);
+    object-fit: cover;
+    background: #f4f4f4 url('/static/anniversary/images/ppt_placeholder.png') center center/cover no-repeat;
+    display: block;
+    margin-bottom: 8px;
+    border: 2px solid #FDD143;
+}
+.ppt-preview-note {
+    font-size: 0.95rem;
+    color: #888;
+    text-align: center;
+}
+
+/* Hide Sidebar Button */
+.hide-sidebar-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #007bff;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.sidebar.hidden {
+    display: none;
+}
+.main-content.expanded {
+    flex: 1 1 100%;
+}
+
+.show-sidebar-btn {
+    position: absolute;
+    left: 10px;
+    top: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #007bff;
+    z-index: 1000;
+}
+
+@media (max-width: 700px) {
+    .main-content {
+        padding: 20px 0;
+    }
+    .card.home-card, .form-wrapper {
+        padding: 18px 8px;
+    }
+    .ppt-preview-img {
+        width: 98vw;
+        max-width: 320px;
+        height: 120px;
+    }
+}
