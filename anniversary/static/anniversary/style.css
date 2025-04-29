@@ -30,6 +30,10 @@ body {
     box-shadow: 2px 0 12px rgba(60,60,60,0.04);
     border-right: 1px solid #e5e7eb; /* subtle border */
     margin: 0;
+    width: 20%;
+    min-width: 180px;
+    max-width: 260px;
+    transition: width 0.3s;
 }
 
 .container {
@@ -69,6 +73,10 @@ body {
     cursor: pointer;
     width: 80%; /* Make buttons a bit narrower for centering effect */
     text-align: center; /* Center text inside button */
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    background: none;
+    border: none;
 }
 
 .sidebar-btn:hover {
@@ -202,10 +210,82 @@ body {
 }
 
 .sidebar.hidden {
+    width: 5% !important;
+    min-width: 60px !important;
+    max-width: 60px !important;
+    overflow-x: hidden;
+}
+
+.sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 32px;
+}
+
+.sidebar-btn {
+    display: flex;
+    align-items: center;
+    font-size: 1.1em;
+    padding: 10px 18px;
+    border-radius: 6px;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    background: (90deg, #4CC46D 60%, #FDD143 100%);
+    border: none;
+}
+.sidebar-btn:hover, .sidebar-btn.active {
+    background: linear-gradient(90deg, #f88888 60%, #FDD143 100%);
+    color: #333;
+}
+.sidebar.hidden .sidebar-btn {
+    justify-content: center;
+    padding: 10px 0;
+    font-size: 1.3em;
+}
+.sidebar.hidden .sidebar-btn span.text {
     display: none;
 }
+.sidebar-btn .icon {
+    color: #0d0e0d ; /* Blue for icon */
+    font-weight: bold;
+    font-size: 1.5em;
+}
+.sidebar-btn .text {
+    color: #222; /* Dark gray for text */
+    font-size: 1.1em;
+    font-weight: 600;
+}
+.sidebar.hidden h2 {
+    display: none;
+}
+.sidebar h2 {
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-size: 1.3em;
+    text-align: center;
+}
+.sidebar.collapsed .sidebar-btn .icon {
+    display: inline;
+}
+.sidebar.collapsed .sidebar-btn .text {
+    display: none;
+}
+
+/* Show text only when sidebar is expanded */
+.sidebar:not(.collapsed) .sidebar-btn .icon {
+    display: none;
+}
+.sidebar:not(.collapsed) .sidebar-btn .text {
+    display: inline;
+}
+
+.main-content {
+    transition: margin-left 0.3s;
+}
 .main-content.expanded {
-    flex: 1 1 100%;
+    margin-left: 60px !important;
 }
 
 .show-sidebar-btn {
@@ -233,3 +313,17 @@ body {
         height: 120px;
     }
 }
+
+@media (max-width: 900px) {
+    .sidebar {
+        min-width: 60px;
+        width: 60px;
+        max-width: 60px;
+    }
+    .sidebar:not(.hidden) .sidebar-btn span.text {
+        display: none;
+    }
+    .sidebar h2 {
+        display: none;
+    }
+}    

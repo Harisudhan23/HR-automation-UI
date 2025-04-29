@@ -42,7 +42,7 @@ body {
 .sidebar-btn {
     padding: 12px 20px;
     text-align: center;
-    background-color: #4CAF50;
+    background-color: linear-gradient(90deg, #f88888 60%, #FDD143 100%);
     color: white;
     text-decoration: none;
     border-radius: 8px;
@@ -51,7 +51,7 @@ body {
 }
 
 .sidebar-btn:hover {
-    background-color: #45a049;
+    background-color:(90deg, #4CC46D 60%, #FDD143 100%);
 }
 
 /* Main Content Section */

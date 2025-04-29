@@ -20,8 +20,14 @@
             <button id="toggleSidebar" class="hide-sidebar-btn" title="Hide Sidebar">&#9776;</button>
             <h2>HR Tool</h2>
             <div class="sidebar-buttons">
-                <a href="{% url 'ppt_automation' %}" class="sidebar-btn">PPT Automation</a>
-                <a href="{% url 'timesheet_validation' %}" class="sidebar-btn">Timesheet Summary</a>
+                <a href="{% url 'ppt_automation' %}" class="sidebar-btn">
+                    <span class="icon">P</span>
+                    <span class="text"> PPT Automation</span>
+                </a>
+                <a href="{% url 'timesheet_validation' %}" class="sidebar-btn">
+                    <span class="icon">T</span>
+                    <span class="text">Timesheet Summary</span>
+                </a>
             </div>
         </aside>
         <!-- Main Content Area -->
@@ -38,6 +44,7 @@
 
         toggleBtn.onclick = function() {
             sidebar.classList.add('hidden');
+            sidebar.classList.toggle('collapsed');
             mainContent.classList.add('expanded');
             showBtn.style.display = 'block';
         };

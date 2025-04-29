@@ -18,14 +18,23 @@ def ppt_automation(request):
             name = form.cleaned_data['name']
             years = form.cleaned_data['years'] 
             file = request.FILES['file']
-            template_path = os.path.join(settings.MEDIA_ROOT, 'WorkAnniversaryLogo.pptx')
+            template_path = os.path.join(settings.MEDIA_ROOT, 'WorkAnniversaryLogo (2).pptx')
             excel_path = os.path.join(settings.MEDIA_ROOT, 'uploaded.xlsx')
 
             with open(excel_path, 'wb+') as destination:
                 for chunk in file.chunks():
                     destination.write(chunk)
 
-            generate_presentation(excel_path, template_path, output_path, name, years)
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            print(f"Saving PPTX to: {output_path}")        
+
+            generate_presentation(
+                template_path=template_path,
+                excel_path=excel_path,
+                output_path=output_path,
+                user_name=name,
+                years_of_service=years
+            )
             return FileResponse(open(output_path, 'rb'), as_attachment=True, filename='Anniversary_Slides.pptx')
     else:
         form = UploadExcelForm()
