@@ -1,265 +1,154 @@
-def generate_presentation(excel_path, template_path, output_path, user_name, years_of_service):
-    import sys
-    import os
-    import time
-    import pandas as pd
-    import comtypes.client
-    from comtypes.gen import PowerPoint as PPConst
-    #import win32com.client
-    
-    def rgb_to_ole(red, green, blue):
-        """Convert RGB to OLE color format used by PowerPoint."""
-        return red + (green * 256) + (blue * 256 * 256)
+import pandas as pd
+from pptx import Presentation
+from pptx.util import Inches, Pt
+from pptx.dml.color import RGBColor
 
-    def duplicate_slide(presentation, slide_index):
-        """Duplicate a slide in a PowerPoint presentation."""
-        slides = presentation.Slides
-        total_slides = slides.Count
-        if slide_index < 1 or slide_index > total_slides:
-            raise ValueError(f"Invalid slide index: {slide_index}. Must be between 1 and {total_slides}")
-        return slides(slide_index).Duplicate().Item(1)
+def generate_presentation(template_path, excel_path, output_path, user_name, years_of_service):
+    df = pd.read_excel(excel_path)
+    df.columns = df.columns.str.strip()
 
-    def clean_first_slide(presentation):
-        """Remove the default 'Employee Name' text from first slide"""
-        first_slide = presentation.Slides(1)
-        for shape in list(first_slide.Shapes):
-            if shape.HasTextFrame and "Employee Name" in shape.TextFrame.TextRange.Text:
-                shape.Delete()
+    wishes = []
+    for _, row in df.iterrows():
+        wish = str(row['Wishes']).strip()
+        signer = str(row['Name']).strip()
+        if not wish or wish.lower() == 'nan':
+            continue
+        wishes.append((wish, signer))
 
-    def add_thank_you_slide(presentation):
-        """Add 'Thank You' slide preserving both corner designs"""
-        thank_you_slide = presentation.Slides(1).Duplicate().Item(1)
-        thank_you_slide.MoveTo(presentation.Slides.Count)
-        slide_width = presentation.PageSetup.SlideWidth
-        slide_height = presentation.PageSetup.SlideHeight
-        for shape in list(thank_you_slide.Shapes):
-            is_top_left = (shape.Left < 200 and shape.Top < 200) 
-            is_bottom_right = (
-                shape.Left > slide_width - 400 and 
-                shape.Top > slide_height - 200 and 
-                shape.Width < 300 and  
-                shape.Height < 300
-            )
+    prs = Presentation(template_path)
+
+    # Place the user name in the correct year slide (index = years_of_service - 1)
+    year_slide_idx = int(years_of_service) - 1  # 1-based to 0-based index
+    for idx, slide in enumerate(prs.slides):
+        if idx == year_slide_idx:
+            left = Inches(4.5)
+            top = Inches(3.5)
+            width = Inches(4)
+            height = Inches(1.2)
+            txBox = slide.shapes.add_textbox(left, top, width, height)
+            tf = txBox.text_frame
+            tf.clear()
+            p = tf.add_paragraph()
+            p.text = user_name
+            p.font.size = Pt(22)
+            p.font.bold = True
+            p.font.name = "Times New Roman"
+            p.alignment = 1
+
+    def get_blank_layout(prs):
+        for layout in prs.slide_layouts:
+            if not layout.placeholders or layout.name.lower() == "blank":
+                return layout
+        return prs.slide_layouts[-1]
+
+    # Add one slide per wish (blank layout)
+    blank_layout = get_blank_layout(prs)
+    i = 0
+    while i < len(wishes):
+        wish_text_1, signer_name_1 = wishes[i]
+        wish_text_2, signer_name_2 = None, None
+        
+
+        # Check if next wish exists and both are short
+        if (i + 1 < len(wishes)
+            and len(wish_text_1) < 120  
+            and len(wishes[i + 1][0]) < 120
             
-            if not (is_top_left or is_bottom_right):
-                shape.Delete()
-        text_box = thank_you_slide.Shapes.AddTextbox(
-            1, 
-            slide_width/2 - 150,  
-            slide_height/2 - 40,  
-            300, 80
-        )
-        text_frame = text_box.TextFrame.TextRange
-        text_frame.Text = "Thank you"
-        text_frame.Font.Size = 65
-        text_frame.Font.Name = "Times New Roman"
-        text_frame.Font.Color.RGB = rgb_to_ole(255, 0, 0)
-        text_frame.Font.Bold = True
-        text_frame.Font.Italic = True
-        text_frame.ParagraphFormat.Alignment = PPConst.ppAlignCenter
-        text_box.TextFrame.WordWrap = False
-
-    def create_message_template_slide(presentation):
-        """Create message template by duplicating first slide and removing anniversary logo + name"""
-        message_slide = presentation.Slides(1).Duplicate().Item(1)
-        for shape in list(message_slide.Shapes):
-            if shape.HasTextFrame and "Employee Name" in shape.TextFrame.TextRange.Text:
-                shape.Delete()
-            elif shape.Type == 13 and not (shape.Left < 100 and shape.Top < 100):
-                shape.Delete()
-        
-        return message_slide
-
-    def modify_template(input_path, output_path, years_of_service):
-        """Process template - keeps anniversary logo+name on first slide only"""
-        try:
-            powerpoint = comtypes.client.CreateObject("PowerPoint.Application")
-            powerpoint.Visible = 1
-            presentation = powerpoint.Presentations.Open(os.path.abspath(input_path))
+        ):
+            wish_text_2, signer_name_2 = wishes[i + 1]
             
-            
-            selected_anniversary = min(max(1, int(years_of_service)), 4)
-            print(f"Selected anniversary template: {selected_anniversary} year(s)")
-            
-            
-            for i in reversed(range(1, presentation.Slides.Count + 1)):
-                if i != selected_anniversary:
-                    presentation.Slides(i).Delete()
-                    
-            
-            create_message_template_slide(presentation)
-            
-            
-            temp_path = output_path.replace(".pptx", "_temp.pptx")
-            presentation.SaveAs(os.path.abspath(temp_path))
-            presentation.Close()
-            time.sleep(1)
-            
-            
-            if os.path.exists(output_path):
-                try:
-                    os.remove(output_path)
-                except PermissionError:
-                    print(f"Please close: {output_path}")
-                    return False
-                    
-            os.replace(temp_path, output_path)
-            print(f"Template ready: {output_path}")
-            return True
-            
-        except Exception as e:
-            print(f"Error modifying template: {e}")
-            return False
-        finally:
-            try:
-                powerpoint.Quit()
-            except:
-                pass
+            i += 3
 
-    def replace_text_in_slide(slide, replacements):
-        """Replace placeholders in a slide's text shapes."""
-        for shape in slide.Shapes:
-            if shape.HasTextFrame:
-                text_range = shape.TextFrame.TextRange
-                text = text_range.Text
-                for key, value in replacements.items():
-                    if key.lower() in text.lower():
-                        text = text.replace(key, value)
-                        text = text.replace(key.upper(), value)
-                        text = text.replace(key.title(), value)
-                text_range.Text = text
+        elif (
+            i + 1 < len(wishes)
+            and len(wish_text_1) < 140
+            and len(wishes[i + 1][0]) < 140
+        ):
+            wish_text_2, signer_name_2 = wishes[i + 1]
+            i += 2
 
-    
-    print("Step 1: Modifying template...")
-    modified_template_path = os.path.splitext(template_path)[0] + "_modified.pptx"
-    if not modify_template(template_path, modified_template_path, years_of_service):
-        print("Failed to modify template. Exiting.")
-        return
-    
-    
-    time.sleep(2)
-    
-    
-    print("Step 2: Generating presentation...")
-    if not os.path.exists(modified_template_path):
-        print(f"Error: Modified template '{modified_template_path}' not found.")
-        return
+        else:
+            i += 1
 
-    try:
-        
-        df = pd.read_excel(excel_path).rename(columns=lambda x: x.strip())
-        required_columns = ['Name', 'Wishes']
-        if not all(col in df.columns for col in required_columns):
-            print(f"Error: Missing required columns in Excel file. Found: {df.columns}")
-            return
-        
-        
-        powerpoint = comtypes.client.CreateObject("PowerPoint.Application")
-        powerpoint.Visible = 1
-        presentation = powerpoint.Presentations.Open(os.path.abspath(modified_template_path))
-        
-        
-        clean_first_slide(presentation)
-        first_slide = presentation.Slides(1)
-        
+        slide = prs.slides.add_slide(blank_layout)
 
-        name_left_position = first_slide.Master.Width - 450  
-        name_top_position = first_slide.Master.Height - 150  
-        name_text_box = first_slide.Shapes.AddTextbox(1, name_left_position, name_top_position, 250, 50)
-        name_text_frame = name_text_box.TextFrame.TextRange
-        name_text_frame.Text = user_name
-        name_text_frame.Font.Size = 24
-        name_text_frame.Font.Name = "Times New Roman"
-        name_text_frame.Font.Color.RGB = rgb_to_ole(0, 0, 0) 
-        name_text_frame.Font.Bold = True
-        name_text_frame.ParagraphFormat.Alignment = PPConst.ppAlignCenter
-        
-        
-        # years_left_position = first_slide.Master.Width - 450
-        # years_top_position = first_slide.Master.Height - 150
-        # years_text_box = first_slide.Shapes.AddTextbox(1, years_left_position, years_top_position, 250, 50)
-        # years_text_frame = years_text_box.TextFrame.TextRange
-        # years_text_frame.Text = f"{years_of_service} Years of Service"
-        # years_text_frame.Font.Size = 20
-        # years_text_frame.Font.Name = "Century Gothic"
-        # years_text_frame.Font.Color.RGB = rgb_to_ole(255, 0, 0)
-        # years_text_frame.Font.Bold = True
-        # years_text_frame.ParagraphFormat.Alignment = PPConst.ppAlignCenter
+        # First wish
+        txBox1 = slide.shapes.add_textbox(Inches(2), Inches(1.5), Inches(7), Inches(1))
+        tf1 = txBox1.text_frame
+        tf1.clear()
+        tf1.word_wrap = True
+        p1 = tf1.add_paragraph()
+        p1.font.name = "Times New Roman"
+        p1.text = wish_text_1
+        p1.font.size = Pt(16)
+        p1.font.bold = False
+        p1.font.italic = False
+        p1.alignment = 1  # Center alignment
 
-        if presentation.Slides.Count < 2:
-            print("Template must have at least 2 slides (cover + message template).")
-            presentation.Close()
-            powerpoint.Quit()
-            return
-    
-        message_template_index = 2  
-        max_messages_per_slide = 2  
-        messages_on_slide = 0  
-        current_slide = None  
-        text_positions_two = [(100, 100), (100, 250)]
-        text_positions_one = [(presentation.PageSetup.SlideWidth // 2 - 250, 
-                      presentation.PageSetup.SlideHeight // 3)]
-        df = df.iloc[::-1] 
+        signer_box1 = slide.shapes.add_textbox(Inches(3), Inches(2.4), Inches(5), Inches(0.6))
+        signer_tf1 = signer_box1.text_frame
+        signer_tf1.clear()
+        signer_tf1.word_wrap = True
+        signer_p1 = signer_tf1.add_paragraph()
+        signer_p1.font.name = "Times New Roman"
+        signer_p1.font.color.rgb = RGBColor(255, 0, 0)
+        signer_p1.text = f"- {signer_name_1}"
+        signer_p1.font.size = Pt(12)
+        signer_p1.font.bold = False
+        signer_p1.font.italic = True
+        signer_p1.alignment = 3  # Right alignment
 
-        for index, row in df.iterrows():
-            name = " ".join(word.capitalize() for word in str(row['Name']).strip().split() if word)
-            message = str(row['Wishes']).strip()
+        # Second wish (if present)
+        if wish_text_2:
+            txBox2 = slide.shapes.add_textbox(Inches(2), Inches(3), Inches(7), Inches(1))
+            tf2 = txBox2.text_frame
+            tf2.clear()
+            tf2.word_wrap = True
+            p2 = tf2.add_paragraph()
+            p2.font.name = "Times New Roman"
+            p2.text = wish_text_2
+            p2.font.size = Pt(16)
+            p2.font.bold = False
+            p2.font.italic = False
+            p2.alignment = 1  # Center alignment
 
-            if not message or message.lower() == 'nan':
-                continue  
-            is_long_message = len(message) > 150
-            if is_long_message or messages_on_slide >= max_messages_per_slide or current_slide is None:
-                current_slide = duplicate_slide(presentation, message_template_index)
-                messages_on_slide = 0  
-            text_positions = text_positions_one if is_long_message else text_positions_two
-            text_position = text_positions[messages_on_slide]  
-            text_box = current_slide.Shapes.AddTextbox(1, *text_position, 500, 100)
-            text_frame = text_box.TextFrame.TextRange
-            text_frame.Text = message
-            text_frame.Font.Size = 18
-            text_frame.Font.Name = "Times New Roman"
-            text_frame.Font.Bold = False
-            text_frame.Font.Color.RGB = rgb_to_ole(0, 0, 0)
-            text_frame.ParagraphFormat.Alignment = PPConst.ppAlignJustify
-            message_height = text_box.TextFrame.TextRange.BoundHeight  
-            signature_left = text_position[0]  
-            signature_top = text_position[1] + message_height + 10  
-            signature_box = current_slide.Shapes.AddTextbox(1, signature_left, signature_top, 500, 30)  
-            signature_frame = signature_box.TextFrame.TextRange
-            signature_frame.Text = f"- {', '.join(name.splitlines())}"  
-            signature_frame.Font.Size = 18
-            signature_frame.Font.Name = "Times New Roman"
-            signature_frame.Font.Color.RGB = rgb_to_ole(255, 0, 0) 
-            signature_frame.Font.Italic = True
-            signature_frame.Font.Bold = True
-            signature_frame.ParagraphFormat.Alignment = PPConst.ppAlignRight  
-            signature_box.TextFrame.WordWrap = False  
-            messages_on_slide += 1 if not is_long_message else max_messages_per_slide  
-        
-        
-        if presentation.Slides.Count > 2:
-            presentation.Slides(2).Delete()  
+            signer_box2 = slide.shapes.add_textbox(Inches(3), Inches(3.7), Inches(5), Inches(0.6))
+            signer_tf2 = signer_box2.text_frame
+            signer_tf2.clear()
+            signer_tf2.word_wrap = True
+            signer_p2 = signer_tf2.add_paragraph()
+            signer_p2.font.name = "Times New Roman"
+            signer_p2.font.color.rgb = RGBColor(255, 0, 0)
+            signer_p2.text = f"- {signer_name_2}"
+            signer_p2.font.size = Pt(12)
+            signer_p2.font.bold = False
+            signer_p2.font.italic = True
+            signer_p2.alignment = 3  # Right alignment
 
-        
-        add_thank_you_slide(presentation)
-
-        
-        presentation.SaveAs(os.path.abspath(output_path))
-        presentation.Close()
-        powerpoint.Quit()
-        
-        
-        try:
-            os.remove(modified_template_path)
-        except:
-            pass
             
-        print(f"Presentation created successfully: {output_path}")
 
-    except Exception as e:
-        print(f"Error in generate_presentation: {e}")
-        try:
-            presentation.Close()
-            powerpoint.Quit()
-        except:
-            pass
+    # Add a Thank You slide at the end
+    thank_slide = prs.slides.add_slide(blank_layout)
+    txBox = thank_slide.shapes.add_textbox(Inches(3.2), Inches(2), Inches(6), Inches(2))
+    tf = txBox.text_frame
+    tf.clear()
+    p = tf.add_paragraph()
+    p.text = "Thank you"
+    p.font.size = Pt(55)
+    p.font.name = "Times New Roman"
+    p.font.bold = True
+    p.font.color.rgb = RGBColor(255, 0, 0)  # Red color
+    p.font.italic = True
+    p.alignment = 1  # Center
+
+    # --- Remove all template slides except the relevant year slide (first 6 slides) ---
+    # (Assuming the first 6 slides are template slides)
+    slides_to_remove = [i for i in range(6) if i != year_slide_idx]
+    # Remove in reverse order to avoid index shifting
+    for i in sorted(slides_to_remove, reverse=True):
+        xml_slides = prs.slides._sldIdLst
+        xml_slides.remove(xml_slides[i])
+
+    prs.save(output_path)
+    print(f"Presentation saved to {output_path}")
+
