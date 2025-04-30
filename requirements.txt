@@ -1,10 +1,8 @@
 django 
 pandas
-comtypes 
 openpyxl
-zipfile
-calendar
-shutil
 parse
 datetime
-import os
+python-pptx
+python-dateutil
+
