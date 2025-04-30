@@ -11,13 +11,11 @@
 <body>
     <!-- Company Logo Top Right -->
     <img src="{% static 'anniversary/images/Entrans_PNG.png' %}" alt="Company Logo" class="logo-top-right">
-    <!-- Sidebar Toggle -->
-    <button id="toggle-btn">&#9776;</button> 
+    <!-- Sidebar Toggle (single button) -->
+    <button id="sidebarToggleBtn" class="sidebar-toggle-btn" title="Hide Sidebar">&#9776;</button>
     <div class="container">
-        <button id="showSidebar" class="show-sidebar-btn" style="display:none;" title="Show Sidebar">&#9776;</button>
         <!-- Sidebar -->
         <aside class="sidebar">
-            <button id="toggleSidebar" class="hide-sidebar-btn" title="Hide Sidebar">&#9776;</button>
             <h2>HR Tool</h2>
             <div class="sidebar-buttons">
                 <a href="{% url 'ppt_automation' %}" class="sidebar-btn">
@@ -37,22 +35,22 @@
         </main>
     </div>
     <script>
-        var toggleBtn = document.getElementById('toggleSidebar');
-        var showBtn = document.getElementById('showSidebar');
+        var sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
         var sidebar = document.querySelector('.sidebar');
         var mainContent = document.querySelector('.main-content');
 
-        toggleBtn.onclick = function() {
-            sidebar.classList.add('hidden');
+        sidebarToggleBtn.onclick = function() {
+            sidebar.classList.toggle('hidden');
             sidebar.classList.toggle('collapsed');
-            mainContent.classList.add('expanded');
-            showBtn.style.display = 'block';
-        };
-
-        showBtn.onclick = function() {
-            sidebar.classList.remove('hidden');
-            mainContent.classList.remove('expanded');
-            showBtn.style.display = 'none';
+            mainContent.classList.toggle('expanded');
+            // Change button title and icon based on sidebar state
+            if (sidebar.classList.contains('hidden')) {
+                sidebarToggleBtn.title = "Show Sidebar";
+                sidebarToggleBtn.innerHTML = "&#9776;"; // Hamburger icon
+            } else {
+                sidebarToggleBtn.title = "Hide Sidebar";
+                sidebarToggleBtn.innerHTML = "&times;"; // X icon
+            }
         };
     </script>
 </body>

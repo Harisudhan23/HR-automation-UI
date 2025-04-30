@@ -18,7 +18,7 @@ def ppt_automation(request):
             name = form.cleaned_data['name']
             years = form.cleaned_data['years'] 
             file = request.FILES['file']
-            template_path = os.path.join(settings.MEDIA_ROOT, 'WorkAnniversaryLogo (2).pptx')
+            template_path = os.path.join(settings.MEDIA_ROOT, 'WorkAnniversaryLogo.pptx')
             excel_path = os.path.join(settings.MEDIA_ROOT, 'uploaded.xlsx')
 
             with open(excel_path, 'wb+') as destination:
