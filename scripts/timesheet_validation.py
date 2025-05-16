@@ -29,27 +29,36 @@ class TimeValidator:
         '''Validate timesheet data according to business rules.'''
         
         df = self.standardize_column_names(df)
-
         
         required_columns = ["Client", "Sheet Name", "Hours"]
         for col in required_columns:
             if col not in df.columns:
                 df[col] = None
-
         
         df["Status"] = "Valid"
         df["Flag"] = ""
-
         
         for index, row in df.iterrows():
             client = str(row["Client"]).strip() if pd.notna(row["Client"]) else ""
             sheet_name = str(row["Sheet Name"]).strip() if pd.notna(row["Sheet Name"]) else ""
             hours = row["Hours"]
 
-            
+            # --- Weekend flag logic ---
+            date_val = row.get("Date", "")
+            weekday = ""
+            try:
+                if pd.notna(date_val):
+                    weekday = pd.to_datetime(date_val).strftime("%A")
+            except Exception:
+                pass
+            if weekday in ["Saturday", "Sunday"]:
+                # If weekend and hours is not empty/zero, raise flag
+                if pd.notna(hours) and hours not in [0, "0", "", None]:
+                    df.at[index, "Flag"] = (df.at[index, "Flag"] + "⚠ Weekend filled; "
+                                            if df.at[index, "Flag"] else "⚠ Weekend filled; ")
+
             is_leave_type = any(leave_type.lower() in client.lower() for leave_type in ["leave", "holiday", "weekend"])
 
-            
             if is_leave_type:
                 # For leave types, hours should be 0 or empty
                 if pd.notna(hours) and hours != 0:
@@ -58,7 +67,6 @@ class TimeValidator:
                     # Leave with 0 hours or empty is valid
                     df.at[index, "Status"] = "Valid"
             else:
-                
                 if pd.notna(hours):
                     if isinstance(hours, (int, float)):
                         if hours == 4:
@@ -84,7 +92,6 @@ class TimeValidator:
             try:
                 
                 parsed_date = parse(date_str)
-
                 
                 df.at[index, "Date"] = parsed_date.strftime("%Y-%m-%d")  
 
@@ -101,27 +108,21 @@ class TimeValidator:
         
         summary_columns = ["S.No", "File Name", "Sheet Name", "Hours", "Review"]
         summary_data = []
-
         
         s_no = 1
-
         
         for sheet_name, df in validated_sheets.items():
             
             total_hours = df["Hours"].sum() if "Hours" in df.columns and df["Hours"].notna().any() else 0
-
             
             issues = []
-
             
             if any(df["Status"] == "Half-day detected"):
                 issues.append("Contains half-days")
-
             
             non_standard_entries = df[df["Status"].str.contains("Full working day should be 8 hrs", na=False)]
             if not non_standard_entries.empty:
                 issues.append("Has non-standard hours")
-
             
             if any(df["Status"] == "Leave/Holiday should be 0 or empty"):
                 issues.append("Incorrectly logged leave/holiday")
@@ -136,6 +137,9 @@ class TimeValidator:
 
             if any(df["Flag"].str.contains("Blank Description", na=False)):  # Using str.contains for flexibility
                 issues.append("Has blank descriptions")
+
+            if any(df["Flag"].str.contains("Weekend filled", na=False)):
+                issues.append("Contains weekend entries")    
 
             # Combine issues into review message
             review_message = ", ".join(issues) if issues else "OK"
@@ -157,7 +161,6 @@ class TimeValidator:
 
         total_hours_row = pd.DataFrame([{'S.No': '', 'File Name': 'Total', 'Sheet Name': '', 'Hours': summary_df['Hours'].sum(), 'Review': ''}])
         summary_df = pd.concat([summary_df, total_hours_row], ignore_index=True)
-
 
         return summary_df
 
@@ -484,18 +487,20 @@ class OutputManager:
 
       try:
         with zipfile.ZipFile(zip_path, 'w') as zipf:
-            # Add the main validated Excel file
-            zipf.write(file_path, os.path.basename(file_path), zipfile.ZIP_DEFLATED)
-            # Add the summary file if it exists
+            # Use input file name + _validated.xlsx for the validated file inside the zip
+            base_name, ext = os.path.splitext(os.path.basename(file_path))
+            validated_name = f"{base_name}_validated{ext}"
+            zipf.write(file_path, validated_name, zipfile.ZIP_DEFLATED)
+            # Add the summary file if it exists, always as Validation_Summary.xlsx
             if os.path.exists(summary_path):
-                zipf.write(summary_path, os.path.basename(summary_path), zipfile.ZIP_DEFLATED)
+                zipf.write(summary_path, "Validation_Summary.xlsx", zipfile.ZIP_DEFLATED)
+
 
         print(f"ZIP archive created at {zip_path} (includes summary if found)")
         return zip_path
       except Exception as e:
         print(f"Error creating ZIP archive: {str(e)}")
         return None
-
 
     def create_new_version(self, file_path):
         """Create a new version of the sheet and archive the old one."""
